@@ -1,0 +1,32 @@
+{
+  "name": "remark-containers",
+  "version": "1.0.0",
+  "description": "Markdown parsing for custom containers",
+  "main": "/src/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nevenall/remark-containers.git"
+  },
+  "keywords": [
+    "markdown",
+    "remark",
+    "unified"
+  ],
+  "author": "Dan 'nevenall' Behlings",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nevenall/remark-containers/issues"
+  },
+  "homepage": "https://github.com/nevenall/remark-containers#readme",
+  "dependencies": {
+    "mocha": "^5.2.0",
+    "rehype-stringify": "^5.0.0",
+    "remark-parse": "^6.0.3",
+    "remark-rehype": "^4.0.0",
+    "unified": "^7.1.0",
+    "vfile-reporter": "^5.1.1"
+  }
+}
