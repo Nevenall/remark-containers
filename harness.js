@@ -21,9 +21,12 @@ processor.process(`
 
 Some text and stuff. 
 
-::: container-one
+::: container-one but now "some optoins"
+## container header
 container text with *emphasis*
 :::
+
+and there is more stuff after.
 
 `, function(err, file) {
    console.error(report(err || file))
