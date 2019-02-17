@@ -33,8 +33,7 @@
 // might be better to do terms like that too. 
 // just need open and closing markers
 
-// var regex = /:::\s*(?<type>\S+?)[\r\t\f\v ]+?(?<options>.*?)\n(?<body>.*?):::/s
-var regex = /:::\s*(?<config>.+)\n(?<body>.*):::/s
+var regex = /:::\s*(?<type>\S+)[\r\t\f\v ]*(?<options>.*?)\n(?<body>.*):::/s
 
 
 
@@ -43,15 +42,20 @@ function plugin(options) {
    function tokenizer(eat, value, silent) {
       if (value.startsWith(":::")) {
          // might be a match
-         // console.log("maybe:", value)
          var m = regex.exec(value)
 
          if (m) {
             if (silent) return true
 
-            console.log(m.groups.config)
-            console.log(m.groups.body)
+            console.log("type: ", m.groups.type)
+            console.log("options: ", m.groups.options)
+            console.log("body: ", m.groups.body)
 
+            // so can we do this as 1 node?
+            // a container with various children?
+            // default is a div with a class of type 
+var s =''
+           
 
          }
 
