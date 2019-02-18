@@ -47,15 +47,28 @@ function plugin(options) {
          if (m) {
             if (silent) return true
 
-            console.log("type: ", m.groups.type)
-            console.log("options: ", m.groups.options)
-            console.log("body: ", m.groups.body)
+            var [type, options, body] = [m.groups.type, m.groups.options, m.groups.body]
+            
+            console.log("type: ", type)
+            console.log("options: ", options)
+            console.log("body: ", body)
 
             // so can we do this as 1 node?
             // a container with various children?
             // default is a div with a class of type 
-var s =''
-           
+            var endOfLine = value.indexOf('\n')
+            var header = value.substring(0, endOfLine)
+
+            eat(header)
+            const exit = this.enterBlock()
+
+            eat(body)({
+               type: type,
+               
+            })
+
+            exit()
+            var s = ''
 
          }
 
