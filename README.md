@@ -1,18 +1,14 @@
 # remark-containers
 
-This [remark] plugin provides parsing for containers so you can wrap blocks of markdown in arbitrary html containers. 
+This [remark][remark] plugin provides parsing for containers so you can wrap blocks of markdown in arbitrary html containers. 
 
 ## Bugs
 
 This is an initial version and is likely to have some bugs. If you find one, please [report it].
 
-## Future plans
+## Syntax
 
-In the future I plan to make the containers more configurable so you can specify whatever html you like for a specific container-type. 
-
-## Default Syntax
-
-The current default syntax is basic. You can specify the name of the html element to wrap the contents in, and optionally add a list of class names to apply to that element. 
+The first word after the `:::` is the container-type. **This is currently expected to be an html element name.** The rest of line is configuration and currently translates directly to the html element's class attribute. In the future I plan to make containers more configurable so you can specify whatever html you like for a specific container-type and map the configuration string in various ways.
 
 ```
 ::: aside optional list of classes
@@ -29,4 +25,46 @@ results in:
 <p>With container contents.</p>
 </aside>
 ```
+## Installation
 
+[npm][npm]:
+
+```bash
+npm install remark-containers
+```
+
+## Usage
+
+Dependencies:
+
+```javascript
+const unified = require('unified')
+const remarkParse = require('remark-parse')
+const remarkContainers = require('remark-containers')
+const stringify = require('rehype-stringify')
+const remark2rehype = require('remark-rehype')
+```
+
+Usage:
+
+```javascript
+unified()
+  .use(remarkParse)
+  .use(remarkContainers)
+  .use(remark2rehype)
+  .use(stringify)
+```
+
+## License
+
+[MIT][license] © [Dan Behlings][nevenall]
+
+<!-- Definitions -->
+
+[license]: https://github.com/Nevenall/remark-containers/blob/master/LICENSE
+
+[nevenall]: https://github.com/nevenall
+
+[npm]: https://www.npmjs.com/package/remark-containers
+
+[remark]: https://github.com/remarkjs/remark
