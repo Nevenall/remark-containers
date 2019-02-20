@@ -48,27 +48,43 @@ function plugin(options) {
             if (silent) return true
 
             var [type, options, body] = [m.groups.type, m.groups.options, m.groups.body]
-            
-            console.log("type: ", type)
-            console.log("options: ", options)
-            console.log("body: ", body)
 
-            // so can we do this as 1 node?
-            // a container with various children?
-            // default is a div with a class of type 
+
+
+            // so how do we parse the body to get the children nodes?
+            // Also, how can we structure this so we can provide flexible custom html for these elements?
+            // we might have add this as a template to the mast
+            // and then inject ourselves into the mast to hast translation and inject 
+
+            // or we might have to structure it so you can inject a function which can translate the parts of the container into whatever you want. 
             var endOfLine = value.indexOf('\n')
             var header = value.substring(0, endOfLine)
 
             eat(header)
-            const exit = this.enterBlock()
+
+            eat('\n')
+
+            var exit = this.enterBlock()
+
+            var children = Parser.parse(body)
+
+            console.log(children)
+
 
             eat(body)({
                type: type,
-               
+               data: {
+                  hName: 'div',
+                  hProperties: {
+                     className: type
+                  }
+               },
+
             })
 
-            exit()
-            var s = ''
+
+            eat(':::')
+
 
          }
 
