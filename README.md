@@ -4,7 +4,7 @@ This [remark][remark] plugin provides parsing for containers so you can wrap blo
 
 ## Bugs
 
-This is an initial version and is likely to have some bugs. If you find one, please [report it].
+This is an initial version and is likely to have some bugs. If you find one, please [report it][bugs].
 
 ## Syntax
 
@@ -64,6 +64,8 @@ unified()
 [license]: https://github.com/Nevenall/remark-containers/blob/master/LICENSE
 
 [nevenall]: https://github.com/nevenall
+
+[bugs]: https://github.com/Nevenall/remark-containers/issues
 
 [npm]: https://www.npmjs.com/package/remark-containers
 
