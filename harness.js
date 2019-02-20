@@ -20,9 +20,13 @@ processor.process(`
 
 Some text and stuff. 
 
-::: container-one but now "some optoins"
-## container header
-container text with *emphasis*
+::: figure figure-table
+one | two | three
+---|---|---
+a | b | c
+::: figcaption
+Tested nested containers
+:::
 :::
 
 and there is more stuff after.

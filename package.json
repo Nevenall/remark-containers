@@ -1,6 +1,6 @@
 {
   "name": "remark-containers",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Markdown parsing for custom containers",
   "main": "/src/index.js",
   "scripts": {

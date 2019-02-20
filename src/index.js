@@ -39,6 +39,8 @@ var regex = /:::\s*(?<type>\S+)[\r\t\f\v ]*(?<options>.*?)\n(?<body>.*):::/s
 
 function plugin(options) {
 
+   options = options || {}
+
    function tokenizer(eat, value, silent) {
       if (value.startsWith(":::")) {
          // might be a match
@@ -47,50 +49,41 @@ function plugin(options) {
          if (m) {
             if (silent) return true
 
-            var [type, options, body] = [m.groups.type, m.groups.options, m.groups.body]
-
-
-
-            // so how do we parse the body to get the children nodes?
-            // Also, how can we structure this so we can provide flexible custom html for these elements?
-            // we might have add this as a template to the mast
-            // and then inject ourselves into the mast to hast translation and inject 
+            var [type, config, body] = [m.groups.type, m.groups.options, m.groups.body]
 
             // or we might have to structure it so you can inject a function which can translate the parts of the container into whatever you want. 
             var endOfLine = value.indexOf('\n')
             var header = value.substring(0, endOfLine)
 
             eat(header)
-
             eat('\n')
 
             var exit = this.enterBlock()
 
-            var children = Parser.parse(body)
+            var add = eat(body)
 
-            console.log(children)
-
-
-            eat(body)({
+            var node = {
                type: type,
                data: {
-                  hName: 'div',
-                  hProperties: {
-                     className: type
-                  }
-               },
+                  hName: options.element || type
+               }
+            }
 
-            })
+            // if there is a config string, use that as the class
+            if (config.trim() !== '') {
+               node.data.hProperties = {
+                  className: config
+               }
+            }
 
+            node.children = this.tokenizeBlock(body, eat.now())
+            
+            add(node)
 
+            exit()
             eat(':::')
-
-
          }
-
       }
-
-
    }
 
    const Parser = this.Parser
