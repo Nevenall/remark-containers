@@ -1,11 +1,14 @@
 {
   "name": "remark-containers",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Markdown parsing for custom containers",
   "main": "/src/index.js",
   "scripts": {
     "test": "mocha"
   },
+  "files": [
+    "src/**"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nevenall/remark-containers.git"
