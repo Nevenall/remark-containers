@@ -13,7 +13,6 @@ var processor = unified()
       type: 'figure-table',
       element: 'figure',
       transform: (node, config, tokenize) => {
-       
          node.children.push({
             type: 'figcaption',
             data: {
@@ -34,7 +33,7 @@ processor.process(`
 
 Some text and stuff. 
 
-::: figure-table Table 01 — A Simple Sample Table
+::: figure-table Table 01 — A **Simple** Sample Table
 one | two | three
 ---|---|---
 a | b | c
