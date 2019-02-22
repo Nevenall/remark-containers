@@ -104,6 +104,11 @@ function plugin(options) {
       blockTokenizers[options.type] = customTokenizer
       blockMethods.splice(blockMethods.indexOf('fencedCode') + 1, 0, options.type)
    } else {
+      // todo - would be nice to make the default container parser the last. 
+      // maybe we add a flag on each custom tokenizer to indicate it's a custom container tokenizer
+      // then we can search for the last one. 
+      // custom tokenizers install before the default one if it exists. need to do both
+      //   
       blockTokenizers.containers = defaultTokenizer
       blockMethods.splice(blockMethods.indexOf('fencedCode') + 1, 0, 'containers')
    }
