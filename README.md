@@ -1,12 +1,8 @@
 # remark-containers
 
-This [remark] plugin provides parsing for containers so you can wrap blocks of markdown in arbitrary html containers. 
+This [remark] plugin provides parsing for `:::` delimited containers to wrap markdown blocks in arbitrary html. 
 
-## Bugs
-
-This is an initial version and is likely to have some bugs. If you find one, please [report it][bugs].
-
-## Default Container
+## Default Syntax
 
 The first word after the `:::` is the HTML element name. The rest of line is optional but, if present, will become the element's `class` attribute. 
 
@@ -28,8 +24,6 @@ results in:
 
 ## Installation
 
-[npm]:
-
 ```bash
 npm install remark-containers
 ```
@@ -38,70 +32,90 @@ npm install remark-containers
 
 ```javascript
 const unified = require('unified')
-const remarkParse = require('remark-parse')
-const remarkContainers = require('remark-containers')
+const parse = require('remark-parse')
+const containers = require('remark-containers')
 const stringify = require('rehype-stringify')
 const remark2rehype = require('remark-rehype')
 
 unified()
-  .use(remarkParse)
-  .use(remarkContainers)
+  .use(parse)
+  .use(containers)
   .use(remark2rehype)
   .use(stringify)
 ```
 
-## Custom Containers
+## Options
 
 Using the `options` for this plugin allows for control over the resulting [mdast].
 
-When used, only containers who's first word matches the `type` will be parsed. It's possible to `use()` this plugin multiple times to support different types of custom containers. 
-
-It is also possible to `use()` various custom containers & `use()` a default container.
-
-### Usage
-
 ```javascript
-unified()
-  .use(remarkContainers, {
-      type: 'my-custom-container',
-      element: 'figure',
-      transform: (node, config, tokenize) => {
-         node.children.push({
-            type: 'figcaption',
-            data: {
-               hName: 'figcaption'
-            },
-            children: tokenize(config)
-         })
+.use(containers, {
+  default: true, 
+  custom: [{
+    type: 'callout',
+    element: 'article',
+    transform: function(node, config, tokenize) {
+      node.data.hProperties = {
+          className: config || 'left'
       }
-   })
+    }
+    }, {
+        type: 'quote',
+        element: 'aside',
+        transform: function(node, config, tokenize) {
+          var words = tokenizeWords.parse(config)
+
+          node.data.hProperties = {
+              className: `quoted ${words.shift()}`
+          }
+          node.children.push({
+              type: 'footer',
+              data: {
+                hName: 'footer'
+              },
+              children: tokenize(words.join(' '))
+          })
+        }
+    }
+  ]
+})
 ```
 
-```markdown
-::: my-custom-container This is a caption **string** for the figure
-# Header One
+### `default`
 
-With container contents. 
-::: 
-```
-results in:
+When `true` the default syntax will be enabled. 
 
-```html
-<figure>
-  <h1>Header One</h1>
-  <p>With container contents.</p>
-  <figcaption>This is a caption <strong>string</strong> for the figure</figcaption>
-</figure>
-```
+### `custom`
 
-The follow `options` are **required**:
+An array of custom container configurations.
 
-- `type:` should be a one word string. Only `::: type-name` markdown will match this container instance.
-- `element:` should be the name of an HTML element. It will wrap the body of the container.
-- `transform:` should be a function accepting
-  - `node:` the [mdast] node for the container.
-  - `config:` the markdown string after the `::: container-type` until the end of the line.
-  - `tokenize:` a `function(value): MDAST Node` you can use to tokenize an inline markdown string if needed.
+#### `type`
+
+A single word string identifying the type of this container. Any markdown of the form `::: {type}` will match this container.
+
+#### `element`
+
+The html element name to use for the container. Default 'div'.
+
+#### `transform(node, config, tokenize)`
+
+A function to manipulate the [mdast] node. 
+
+##### `node`
+
+The [mdast] node for this container.
+
+##### `config`
+
+The markdown string from after `::: type` until the end of the line.
+
+##### `tokenize`
+
+ A `function(value): mdastNode` you can use to tokenize an inline markdown string, if needed.
+
+## Feedback
+
+[Bugs & feedback][bugs].
 
 ## License
 

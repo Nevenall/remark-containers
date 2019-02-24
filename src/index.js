@@ -1,19 +1,10 @@
 var regex = /:::\s*(?<type>\S+)[\r\t\f\v ]*(?<options>.*?)\n(?<body>.*?):::/s
 
 function plugin(options) {
-
-   options = options || {}
-
-   // if options is valid, with a type, and a transform function
-   // then we should create a special function named typeContainer and add that
-   // so, if we don't specify a custom container, would we to still add the default?
-   // what would be the most expected? I think not do it.
-
-   var useCustomTokenizer = false
-
-   if (options.type !== undefined && options.type !== '' && options.transform !== undefined) {
-      useCustomTokenizer = true
+   options = options || {
+      default: true
    }
+   options.custom = options.custom || []
 
    function defaultTokenizer(eat, value, silent) {
       if (value.startsWith(":::")) {
@@ -57,62 +48,63 @@ function plugin(options) {
       }
    }
 
-   function customTokenizer(eat, value, silent) {
-      if (value.startsWith(":::")) {
-         // might be a match
-         var m = regex.exec(value)
-
-         // only match containers of the specified type
-         if (m && m.groups.type === options.type) {
-
-            if (silent) return true
-
-            var [type, config, body] = [m.groups.type, m.groups.options, m.groups.body]
-            
-            var exit = this.enterBlock()
-            var now = eat.now()
-            
-            // eat the header line
-            eat(value.substring(0, value.indexOf('\n') + 1))
-
-            var add = eat(body)
-
-            var node = {
-               type: type,
-               data: {
-                  hName: options.element || 'div'
-               }
-            }
-
-            node.children = this.tokenizeBlock(body, now)
-            // pass the transform a tokenize function with the current location in case they want to parse the config 
-            options.transform(node, config, (value) => this.tokenizeInline(value, now))
-
-            add(node)
-
-            eat(':::')
-            exit()
-         }
-      }
-   }
-
    const Parser = this.Parser
    const blockTokenizers = Parser.prototype.blockTokenizers
    const blockMethods = Parser.prototype.blockMethods
 
-   if (useCustomTokenizer) {
-      blockTokenizers[options.type] = customTokenizer
-      blockMethods.splice(blockMethods.indexOf('fencedCode') + 1, 0, options.type)
-   } else {
-      // todo - would be nice to make the default container parser the last. 
-      // maybe we add a flag on each custom tokenizer to indicate it's a custom container tokenizer
-      // then we can search for the last one. 
-      // custom tokenizers install before the default one if it exists. need to do both
-      //   
-      blockTokenizers.containers = defaultTokenizer
-      blockMethods.splice(blockMethods.indexOf('fencedCode') + 1, 0, 'containers')
+   var insertPoint = blockMethods.indexOf('fencedCode') + 1
+
+   options.custom.forEach(el => {
+      if (el.type !== undefined && el.type !== '' && el.transform !== undefined) {
+         let name = `${el.type}_container`
+
+         blockTokenizers[name] = function(eat, value, silent) {
+            if (value.startsWith(":::")) {
+               // might be a match
+               var m = regex.exec(value)
+
+               // only match containers of the specified type
+               if (m && m.groups.type === el.type) {
+
+                  if (silent) return true
+
+                  var [type, config, body] = [m.groups.type, m.groups.options, m.groups.body]
+
+                  var exit = this.enterBlock()
+                  var now = eat.now()
+
+                  // eat the header line
+                  eat(value.substring(0, value.indexOf('\n') + 1))
+
+                  var add = eat(body)
+
+                  var node = {
+                     type: type,
+                     data: {
+                        hName: el.element || 'div'
+                     }
+                  }
+
+                  node.children = this.tokenizeBlock(body, now)
+                  // pass the transform a tokenize function with the current location in case they want to parse the config 
+                  el.transform(node, config, (value) => this.tokenizeInline(value, now))
+
+                  add(node)
+
+                  eat(':::')
+                  exit()
+               }
+            }
+         }
+
+         blockMethods.splice(insertPoint++, 0, name)
+      }
+   })
+
+   if (options.default) {
+      blockTokenizers.container = defaultTokenizer
+      blockMethods.splice(insertPoint, 0, 'container')
    }
 }
-
 
 module.exports = plugin
