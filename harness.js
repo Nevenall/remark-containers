@@ -56,25 +56,22 @@ var processor = unified()
 
 processor.process(`
 
-# Header One
+::: div drop-caps-list
+::: div drop-cap 1 
+**Choose a crew type.** The crew type determines the group’s purpose, their special abilities, and how they advance.
 
-A sentence.
-
-::: quote right dan *the man* behlings
-this is a thing that I said that was awesome!
+You begin at **Tier 0**, with **strong hold** and 0 {rep}. You start with 2 {coin}.
+:::
 :::
 
-::: div a-div
-sdlckmaslckmskdlcmlds
-csldckmsdm
+What if we have a paragraph between these containers?
+
+::: div another
+## Header of my other div
+
+and some content to mak us all happy
 :::
 
-::: sidebar right
-## Header Two
-An aside about stuff.
-:::
-
-and there is more stuff after.
 
 `, function(err, file) {
    console.error(report(err || file))
