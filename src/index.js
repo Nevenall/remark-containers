@@ -1,4 +1,4 @@
-var regex = /:::\s*(?<type>\S+)[\r\t\f\v ]*(?<options>.*?)/s
+var regex = /^:::[\t\f ]*(?<type>\S+)[\t\f ]*(?<options>.*?)$/m
 
 function plugin(options) {
    options = options || {
@@ -23,51 +23,43 @@ function plugin(options) {
 
             do {
                let line = lines[i++]
-               if (regex.exec(line)) {
+               if (/^:::[\t\f ]*\S+.*$/.exec(line)) {
+                  // found nested container
                   ++depth
                } else if (line === ':::') {
+                  // found end of nested container
                   --depth
                }
                container.push(line)
             } while (depth > 0 && i <= lines.length)
 
-            // todo - can correctly identify the start and end of a container
-            // we want to eat the whole container below, but the first and last lines are not part of the body
-            // separate out the body, and blocktokenize that. 
+            if (depth == 0) {
+               var exit = this.enterBlock()
+               // if we reach the end of the lines and the depth is not 0, there is a mismatch of start and closing containers and we should not process the container
+               // form the body from the container lines except the first and last lines
+               var body = container.slice(1, container.length - 1).join('\n')
 
-            // also, can we make simplify the custom/default? 
+               // Eat the container
+               var add = eat(container.join('\n'))
 
-            // form the body from the container lines except the first and last lines
-            var body = container.slice(1, container.length - 1).join('\n')
-
-
-            // eat the header line
-            eat(value.substring(0, value.indexOf('\n') + 1))
-
-            var exit = this.enterBlock()
-
-            var add = eat(container)
-
-            var node = {
-               type: type,
-               data: {
-                  hName: type
+               var node = {
+                  type: type,
+                  data: {
+                     hName: type
+                  }
                }
-            }
 
-            // if there is a config string, use that as the element class
-            if (config.trim() !== '') {
-               node.data.hProperties = {
-                  className: config
+               // if there is a config string, use that as the element class
+               if (config.trim() !== '') {
+                  node.data.hProperties = {
+                     className: config.trim()
+                  }
                }
+
+               node.children = this.tokenizeBlock(body, eat.now())
+               add(node)
+               exit()
             }
-
-            node.children = this.tokenizeBlock(container, eat.now())
-
-            add(node)
-
-            exit()
-            eat(':::')
          }
       }
    }
@@ -86,37 +78,52 @@ function plugin(options) {
             if (value.startsWith(":::")) {
                // might be a match
                var m = regex.exec(value)
-
                // only match containers of the specified type
                if (m && m.groups.type === el.type) {
-
                   if (silent) return true
 
-                  var [type, config, body] = [m.groups.type, m.groups.options, m.groups.body]
+                  var [type, config] = [m.groups.type, m.groups.options]
 
-                  var exit = this.enterBlock()
-                  var now = eat.now()
+                  var container = []
+                  var depth = 0
+                  var i = 0
+                  var lines = value.split('\n')
 
-                  // eat the header line
-                  eat(value.substring(0, value.indexOf('\n') + 1))
-
-                  var add = eat(body)
-
-                  var node = {
-                     type: type,
-                     data: {
-                        hName: el.element || 'div'
+                  do {
+                     let line = lines[i++]
+                     if (/^:::[\t\f ]*\S+.*$/.exec(line)) {
+                        // found nested container
+                        ++depth
+                     } else if (line === ':::') {
+                        // found end of nested container
+                        --depth
                      }
+                     container.push(line)
+                  } while (depth > 0 && i <= lines.length)
+
+                  if (depth == 0) {
+                     var exit = this.enterBlock()
+                     var now = eat.now()
+
+                     var body = container.slice(1, container.length - 1).join('\n')
+
+                     // Eat the container
+                     var add = eat(container.join('\n'))
+
+                     var node = {
+                        type: type,
+                        data: {
+                           hName: el.element || 'div'
+                        }
+                     }
+
+                     node.children = this.tokenizeBlock(body, now)
+                     // pass the transform a tokenize function with the current location in case they want to parse the config 
+                     el.transform(node, config, (value) => this.tokenizeInline(value, now))
+
+                     add(node)
+                     exit()
                   }
-
-                  node.children = this.tokenizeBlock(body, now)
-                  // pass the transform a tokenize function with the current location in case they want to parse the config 
-                  el.transform(node, config, (value) => this.tokenizeInline(value, now))
-
-                  add(node)
-
-                  eat(':::')
-                  exit()
                }
             }
          }

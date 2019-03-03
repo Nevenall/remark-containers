@@ -1,7 +1,9 @@
 var unified = require('unified')
 var markdown = require('remark-parse')
 var remark2rehype = require('remark-rehype')
+var format = require('rehype-format')
 var html = require('rehype-stringify')
+
 var report = require('vfile-reporter')
 
 var tokenizeWords = require('space-separated-tokens')
@@ -51,13 +53,14 @@ var processor = unified()
    })
 
    .use(remark2rehype)
+   .use(format)
    .use(html)
 
 
 processor.process(`
 
 ::: div drop-caps-list
-::: div drop-cap 1 
+::: div drop-cap 1
 **Choose a crew type.** The crew type determines the group’s purpose, their special abilities, and how they advance.
 
 You begin at **Tier 0**, with **strong hold** and 0 {rep}. You start with 2 {coin}.
@@ -66,7 +69,7 @@ You begin at **Tier 0**, with **strong hold** and 0 {rep}. You start with 2 {coi
 
 What if we have a paragraph between these containers?
 
-::: div another
+::: columns
 ## Header of my other div
 
 and some content to mak us all happy
