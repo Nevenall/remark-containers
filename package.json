@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/nevenall/remark-containers#readme",
   "devDependencies": {
-    "mocha": "^5.2.0",
+    "mocha": "^6.0.2",
     "rehype-parse": "^6.0.0",
     "rehype-remark": "^5.0.1",
     "rehype-stringify": "^5.0.0",
