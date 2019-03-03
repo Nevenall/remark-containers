@@ -8,15 +8,18 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Harness",
-      "program": "${workspaceFolder}\\harness.js"
+      "name": "Harness",
+      "program": "${workspaceFolder}/harness.js"
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Mocha All",
+      "name": "Mocha",
       "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
       "args": [
+        "--colors",
+        "--timeout",
+        "999999",
         "${workspaceFolder}/test"
       ]
     }
