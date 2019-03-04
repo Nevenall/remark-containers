@@ -56,20 +56,43 @@ var processor = unified()
 describe('remark-containers', function() {
 
    var tests = [{
-      md: `::: div drop-caps-list
-::: div drop-cap 1 
+         testing: "nested containers",
+         md: `
+::: div drop-caps-list
+::: div drop-cap 1
 **Choose a crew type.** The crew type determines the group’s purpose, their special abilities, and how they advance.
 
 You begin at **Tier 0**, with **strong hold** and 0 {rep}. You start with 2 {coin}.
 :::
 :::
+
+What if we have a paragraph between these containers?
+
+::: columns
+## Header of my other div
+
+and some content to mak us all happy
+:::
+      
 `,
-      expected: `<h1>Title with <span class="term-2">term</span> with some <span class="term-2">text</span> after.</h1>`
-   }]
+         expected: `<h1>Title with <span class="term-2">term</span> with some <span class="term-2">text</span> after.</h1>`
+      },
+      {
+         testing: "don't wrap a block with a duplicate html element",
+         md: `
+::: table
+header 1 | header 2
+---------|----------
+value 1 | value 2
+:::         
+`,
+         expected: `todo - we expect this to throw, it throws a length undefined error`
+      }
+   ]
 
    tests.forEach(function(test) {
 
-      it(test.md, function() {
+      it(test.testing, function() {
          processor.process(test.md, function(err, file) {
             if (err) assert.fail(err)
             assert.equal(file.toString(), test.expected)
