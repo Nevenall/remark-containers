@@ -1,26 +1,61 @@
 # remark-containers
 
-This [remark] plugin provides parsing for `:::` delimited containers to wrap markdown blocks in arbitrary html. 
+This [remark] plugin provides parsing for containers in your markdown. 
 
 ## Default Syntax
 
-The first word after the `:::` is the HTML element name. The rest of line is optional but, if present, will become the element's `class` attribute. 
+Containers begin with `::: {HTML Element Name} [optional list of classes]` on a new line, and end with `:::` on a new line. 
+
+**Watch out** for any white-space before or after the container markers.
+
+For example:
 
 ```markdown
 ::: aside class-one class-two
 # Header One
 
 With container contents. 
-::: 
+:::
 ```
 
-results in:
+renders as:
 
 ```html
 <aside class="class-one class-two">
   <h1>Header One</h1>
   <p>With container contents.</p>
 </aside>
+```
+
+Containers can be nested, provided they are not indented. 
+
+For example: 
+
+```markdown
+::: div outer
+# Header One
+
+Outer contents.
+
+::: div inner
+Inner contents. 
+:::
+
+More outer contents.
+::: 
+```
+
+renders as:
+
+```html
+<div class="outer">           
+  <h1>Header One</h1>         
+  <p>Outer contents.</p>      
+  <div class="inner">         
+    <p>Inner contents.</p>    
+  </div>                      
+  <p>More outer contents.</p> 
+</div>                        
 ```
 
 ## Installation
@@ -47,7 +82,7 @@ unified()
 
 ## Options
 
-Using the `options` for this plugin allows for control over the resulting [mdast].
+Passing an `options` object allows full control over the resulting [mdast]. 
 
 ```javascript
 .use(containers, {
@@ -84,7 +119,7 @@ Using the `options` for this plugin allows for control over the resulting [mdast
 
 ### `default`
 
-When `true` the default syntax will be enabled. 
+When `true` the default syntax will also be enabled. 
 
 ### `custom`
 
@@ -92,7 +127,7 @@ An array of custom container configurations.
 
 #### `type`
 
-A single word string identifying the type of this container. Any markdown of the form `::: {type}` will match this container.
+A single word string identifying the type of this container. Any markdown of the form `::: {type}` will use this custom transform.
 
 #### `element`
 
@@ -108,7 +143,7 @@ The [mdast] node for this container.
 
 ##### `config`
 
-The markdown string from after `::: type` until the end of the line.
+The string after `::: type` until the end of the line. Can be used to configure how the transform operates.
 
 ##### `tokenize`
 

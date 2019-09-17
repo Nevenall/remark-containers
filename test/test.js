@@ -68,14 +68,16 @@ You begin at **Tier 0**, with **strong hold** and 0 {rep}. You start with 2 {coi
 
 What if we have a paragraph between these containers?
 
-::: columns
+::: div columns
 ## Header of my other div
 
 and some content to mak us all happy
 :::
       
 `,
-         expected: `<h1>Title with <span class="term-2">term</span> with some <span class="term-2">text</span> after.</h1>`
+         expected: `<div class="drop-caps-list"><div class="drop-cap 1"><p><strong>Choose a crew type.</strong> The crew type determines the group’s purpose, their special abilities, and how they advance.</p><p>You begin at <strong>Tier 0</strong>, with <strong>strong hold</strong> and 0 {rep}. You start with 2 {coin}.</p></div></div>
+         <p>What if we have a paragraph between these containers?</p>
+         <div class="columns"><h2>Header of my other div</h2><p>and some content to mak us all happy</p></div>`
       },
       {
          testing: "don't wrap a block with a duplicate html element",

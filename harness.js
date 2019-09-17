@@ -60,9 +60,48 @@ var processor = unified()
 
 const fs = require('fs')
 
-const text = fs.readFileSync('readme.md')
+// const text = `
+// ::: div drop-caps-list
 
+// ::: div drop-cap 1
+// **Choose a crew type.** The crew type determines the group’s purpose, their special abilities, and how they advance.
 
+// You begin at **Tier 0**, with **strong hold** and 0 {rep}. You start with 2 {coin}.
+// :::
+
+// :::
+
+// What if we have a paragraph between these containers?
+
+// ::: div columns
+
+// ## Header of my other div
+
+// and some content to mak us all happy
+
+// :::
+// `
+
+const text = `
+::: div outer
+
+# Header One
+
+Outer contents.
+
+::: div inner
+
+Inner contents. 
+
+:::
+
+More outer contents.
+
+:::
+`
+// const text = fs.readFileSync('readme.md')
+
+console.log(text)
 processor.process(text, function(err, file) {
    console.error(report(err || file))
    console.log(String(file))
