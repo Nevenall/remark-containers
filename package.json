@@ -1,5 +1,5 @@
 {
-  "name": "@nevenall/remark-containers",
+  "name": "remark-containers",
   "version": "1.1.1",
   "description": "Markdown parsing for custom containers",
   "main": "src/index.js",
