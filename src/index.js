@@ -1,4 +1,4 @@
-var regex = /^:::[\t\f ]*(?<type>\S+)[\t\f ]*(?<options>.*?)$/m
+var regex = /^:::[\t\f ]*(\S+)[\t\f ]*(.*?)$/m;
 
 function plugin(options) {
    options = options || {
@@ -14,7 +14,7 @@ function plugin(options) {
          if (m) {
             if (silent) return true
 
-            var [type, config] = [m.groups.type, m.groups.options]
+            var [type, config] = [m[1], m[2]]
 
             var container = []
             var depth = 0
@@ -79,10 +79,10 @@ function plugin(options) {
                // might be a match
                var m = regex.exec(value)
                // only match containers of the specified type
-               if (m && m.groups.type === el.type) {
+               if (m && m[1] === el.type) {
                   if (silent) return true
 
-                  var [type, config] = [m.groups.type, m.groups.options]
+                  var [type, config] = [m[1], m[2]]
 
                   var container = []
                   var depth = 0
