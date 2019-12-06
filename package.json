@@ -25,14 +25,14 @@
   },
   "homepage": "https://github.com/nevenall/remark-containers#readme",
   "devDependencies": {
-    "mocha": "^6.1.4",
-    "rehype-format": "^2.3.1",
-    "rehype-parse": "^6.0.0",
-    "rehype-remark": "^5.0.1",
-    "rehype-stringify": "^5.0.0",
-    "remark-parse": "^6.0.3",
-    "remark-rehype": "^4.0.0",
-    "unified": "^7.1.0",
-    "vfile-reporter": "^5.1.1"
+    "mocha": "^6.2.2",
+    "rehype-format": "^3.0.0",
+    "rehype-parse": "^6.0.2",
+    "rehype-remark": "^7.0.0",
+    "rehype-stringify": "^6.0.1",
+    "remark-parse": "^7.0.2",
+    "remark-rehype": "^5.0.0",
+    "unified": "^8.4.2",
+    "vfile-reporter": "^6.0.0"
   }
 }
