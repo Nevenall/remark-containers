@@ -1,4 +1,4 @@
-var regex = /^:::[\t\f ]*(\S+)[\t\f ]*(.*?)$/m;
+var regex = /^:::[\t\f ]*(\S+)[\t\f ]*(.*?)$/m
 
 function plugin(options) {
    options = options || {
@@ -8,9 +8,9 @@ function plugin(options) {
 
    function defaultTokenizer(eat, value, silent) {
       // might be a match
-      if (value.startsWith(":::")) {
+      if (value.trim().startsWith(":::")) {
 
-         var m = regex.exec(value)
+         var m = regex.exec(value.trim())
          if (m) {
             if (silent) return true
 
@@ -23,10 +23,10 @@ function plugin(options) {
 
             do {
                let line = lines[i++]
-               if (/^:::[\t\f ]*\S+.*$/.exec(line)) {
+               if (/^:::[\t\f ]*\S+.*$/.exec(line.trim())) {
                   // found nested container
                   ++depth
-               } else if (line === ':::') {
+               } else if (line.trim() === ':::') {
                   // found end of nested container
                   --depth
                }
@@ -75,9 +75,9 @@ function plugin(options) {
          let name = `${el.type}_container`
 
          blockTokenizers[name] = function(eat, value, silent) {
-            if (value.startsWith(":::")) {
+            if (value.trim().startsWith(":::")) {
                // might be a match
-               var m = regex.exec(value)
+               var m = regex.exec(value.trim())
                // only match containers of the specified type
                if (m && m[1] === el.type) {
                   if (silent) return true
@@ -91,10 +91,10 @@ function plugin(options) {
 
                   do {
                      let line = lines[i++]
-                     if (/^:::[\t\f ]*\S+.*$/.exec(line)) {
+                     if (/^:::[\t\f ]*\S+.*$/.exec(line.trim())) {
                         // found nested container
                         ++depth
-                     } else if (line === ':::') {
+                     } else if (line.trim() === ':::') {
                         // found end of nested container
                         --depth
                      }

@@ -2,9 +2,17 @@
 
 Since this package is starting to be used by the wider world, I'll start a changelog. 
 
-I try to keep to symantic versioning.
+I try to keep to semantic versioning.
 
-## [Unreleased](https://github.com/Nevenall/remark-containers)
+## 1.2.0
+
+### Added
+
+- more and better tests.
+
+### Changed
+
+- improved container recognition so `:::` markers can be indented by 2 spaces and/or be followed by whitespace.
 
 ## 1.1.1
 

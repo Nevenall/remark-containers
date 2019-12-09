@@ -84,22 +84,24 @@ const fs = require('fs')
 
 const text = `
 ::: div outer
-
 # Header One
-
 Outer contents.
 
-::: div inner
-
-Inner contents. 
-
-:::
+  ::: div inner
+  Inner contents. 
+  :::
 
 More outer contents.
-
 :::
 `
-// const text = fs.readFileSync('readme.md')
+
+
+// let text = `
+// ::: div
+// # Header One
+// Contents.
+// :::
+// `
 
 console.log(text)
 processor.process(text, function(err, file) {

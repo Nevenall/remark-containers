@@ -6,8 +6,6 @@ This [remark] plugin provides parsing for containers in your markdown.
 
 Containers begin with `::: {HTML Element Name} [optional list of classes]` on a new line, and end with `:::` on a new line. 
 
-**Watch out** for any white-space before or after the container markers.
-
 For example:
 
 ```markdown
@@ -27,7 +25,9 @@ renders as:
 </aside>
 ```
 
-Containers can be nested, provided they are not indented. 
+Containers can be indented by up to 2 spaces.
+
+Containers can also be nested.
 
 For example: 
 
@@ -37,9 +37,9 @@ For example:
 
 Outer contents.
 
-::: div inner
-Inner contents. 
-:::
+ ::: div inner
+ Inner contents. 
+ :::
 
 More outer contents.
 ::: 
