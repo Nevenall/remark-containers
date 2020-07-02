@@ -19,7 +19,7 @@ var processor = unified()
       custom: [{
          type: 'sidebar',
          element: 'aside',
-         transform: function(node, config, tokenize) {
+         transform: function (node, config, tokenize) {
             node.data.hProperties = {
                className: config || 'left'
             }
@@ -27,7 +27,7 @@ var processor = unified()
       }, {
          type: 'callout',
          element: 'article',
-         transform: function(node, config, tokenize) {
+         transform: function (node, config, tokenize) {
             node.data.hProperties = {
                className: config || 'left'
             }
@@ -35,7 +35,7 @@ var processor = unified()
       }, {
          type: 'quote',
          element: 'aside',
-         transform: function(node, config, tokenize) {
+         transform: function (node, config, tokenize) {
             var words = tokenizeWords.parse(config)
 
             node.data.hProperties = {
@@ -53,8 +53,8 @@ var processor = unified()
    })
 
    .use(remark2rehype)
-   .use(format)
-   .use(html)
+   // .use(format)
+   .use(html, {})
 
 
 
@@ -82,29 +82,38 @@ const fs = require('fs')
 // :::
 // `
 
-const text = `
-::: div outer
-# Header One
-Outer contents.
-
-  ::: div inner
-  Inner contents. 
-  :::
-
-More outer contents.
-:::
-`
-
-
-// let text = `
-// ::: div
+// const text = `
+// ::: div outer
 // # Header One
-// Contents.
+// Outer contents.
+
+// ::: quote quote attribution
+// - not 
+// - to be 
+// - parsed
+// :::
+
+// More outer contents.
 // :::
 // `
 
+
+let text = `
+::: noparse div outer
+# Header One
+
+Outer contents.
+
+ ::: div inner
+ Inner contents. 
+ :::
+
+More outer contents.
+::: 
+`
+
 console.log(text)
-processor.process(text, function(err, file) {
+processor.process(text, function (err, file) {
    console.error(report(err || file))
-   console.log(String(file))
+   console.log(file.toString())
 })

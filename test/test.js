@@ -57,7 +57,6 @@ function runTests(tests, processor) {
    })
 }
 
-
 describe('basic usage', function () {
 
    let processor = unified()
@@ -118,6 +117,17 @@ Contents.
 :::   
 `,
       expected: `<div><h1>Header One</h1><p>Contents.</p></div>`
+   },
+   {
+      testing: 'noparse disables markdown parsing of container contents for default syntax',
+      md: `
+::: noparse hero
+# Header One
+- list
+- *list*
+:::   
+`,
+      expected: `<hero># Header One\n- list\n- *list*</hero>`
    }
    ]
 
@@ -159,3 +169,44 @@ More outer contents.
 
    runTests(tests, processor)
 })
+
+
+// todo - add tests for custom containers too
+
+// describe('configuration', function () {
+
+//    let processor = unified()
+//       .use(markdown, { commonmark: true })
+//       .use(containers, {})
+//       .use(remark2rehype)
+//       .use(html)
+
+
+//    let tests = [{
+//       testing: "default false",
+//       md: `
+// ::: div
+
+// # Header One
+
+// Contents.
+
+// :::
+// `,
+//       expected: `<div><h1>Header One</h1><p>Contents.</p></div>`
+//    }, {
+//       testing: "can skip specific containers",
+//       md: `
+// ::: div
+
+// # Header One
+
+// Contents.
+
+// :::
+// `,
+//       expected: `<div><h1>Header One</h1><p>Contents.</p></div>`
+//    }]
+
+//    runTests(tests, processor)
+// })
