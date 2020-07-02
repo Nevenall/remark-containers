@@ -4,7 +4,13 @@ Since this package is starting to be used by the wider world, I'll start a chang
 
 I try to keep to semantic versioning.
 
-## 1.2.0
+## 1.1.3
+
+### Added
+
+- `noparse` keyword after `:::` prevents parsing the content of the container. 
+
+## 1.1.2
 
 ### Added
 

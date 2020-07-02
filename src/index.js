@@ -1,4 +1,4 @@
-var regex = /^:::[\t\f ]*(\S+)[\t\f ]*(.*?)$/m
+var regex = /^:::[\t\f ]*(?<noparse>noparse)?[\t\f ]*(?<type>\S+)[\t\f ]*(?<config>.*?)$/m
 
 function plugin(options) {
    options = options || {
@@ -14,7 +14,7 @@ function plugin(options) {
          if (m) {
             if (silent) return true
 
-            var [type, config] = [m[1], m[2]]
+            var [nopparse, type, config] = [m.groups.noparse, m.groups.type, m.groups.config]
 
             var container = []
             var depth = 0
@@ -56,7 +56,12 @@ function plugin(options) {
                   }
                }
 
-               node.children = this.tokenizeBlock(body, eat.now())
+               // if the noparse flag is present treat the body as text content.
+               if (nopparse) {
+                  node.children = [{ type: 'text', value: body }]
+               } else {
+                  node.children = this.tokenizeBlock(body, eat.now())
+               }
                add(node)
                exit()
             }
@@ -74,15 +79,15 @@ function plugin(options) {
       if (el.type !== undefined && el.type !== '' && el.transform !== undefined) {
          let name = `${el.type}_container`
 
-         blockTokenizers[name] = function(eat, value, silent) {
+         blockTokenizers[name] = function (eat, value, silent) {
             if (value.trim().startsWith(":::")) {
                // might be a match
                var m = regex.exec(value.trim())
                // only match containers of the specified type
-               if (m && m[1] === el.type) {
+               if (m && m.groups.type === el.type) {
                   if (silent) return true
 
-                  var [type, config] = [m[1], m[2]]
+                  var [nopparse, type, config] = [m.groups.noparse, m.groups.type, m.groups.config]
 
                   var container = []
                   var depth = 0
@@ -117,8 +122,14 @@ function plugin(options) {
                         }
                      }
 
-                     node.children = this.tokenizeBlock(body, now)
-                     // pass the transform a tokenize function with the current location in case they want to parse the config 
+                     // if the noparse flag is present treat the body as text content
+                     if (nopparse) {
+                        node.children = [{ type: 'text', value: body }]
+                     } else {
+                        node.children = this.tokenizeBlock(body, now)
+                     }
+
+                     // pass our custom transform a tokenize function with the current location in case they want to parse the config 
                      el.transform(node, config, (value) => this.tokenizeInline(value, now))
 
                      add(node)

@@ -4,7 +4,7 @@ This [remark] plugin provides parsing for containers in your markdown.
 
 ## Default Syntax
 
-Containers begin with `::: {HTML Element Name} [optional list of classes]` on a new line, and end with `:::` on a new line. 
+Containers begin with `::: [noparse] {HTML Element Name} [optional list of classes]` on a new line, and end with `:::` on a new line. 
 
 For example:
 
