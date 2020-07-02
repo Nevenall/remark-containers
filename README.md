@@ -4,7 +4,7 @@ This [remark] plugin provides parsing for containers in your markdown.
 
 ## Default Syntax
 
-Containers begin with `::: [noparse] {HTML Element Name} [optional list of classes]` on a new line, and end with `:::` on a new line. 
+Containers begin with `::: [noparse] {HTML Element Name} [optional list of classes]` on a new line, and end with `:::` on a new line. Container markers may be indented by up to 2 spaces.
 
 For example:
 
@@ -25,14 +25,43 @@ renders as:
 </aside>
 ```
 
-Containers can be indented by up to 2 spaces.
-
-Containers can also be nested.
+### Containers may be nested
 
 For example: 
 
 ```markdown
 ::: div outer
+# Header One
+
+Outer contents.
+
+  ::: div inner
+  Inner contents.
+  :::
+
+More outer contents.
+::: 
+```
+
+renders as:
+
+```html
+<div class="outer">           
+  <h1>Header One</h1>         
+  <p>Outer contents.</p>      
+  <div class="inner">         
+    <p>Inner contents.</p>    
+  </div>                      
+  <p>More outer contents.</p> 
+</div>                        
+```
+
+### `noparse` stops processing of the container contents and instead treats it as raw text.
+
+For example: 
+
+```markdown
+::: noparse div outer
 # Header One
 
 Outer contents.
@@ -49,12 +78,12 @@ renders as:
 
 ```html
 <div class="outer">           
-  <h1>Header One</h1>         
-  <p>Outer contents.</p>      
-  <div class="inner">         
-    <p>Inner contents.</p>    
-  </div>                      
-  <p>More outer contents.</p> 
+# Header One
+Outer contents.
+::: div inner
+Inner contents. 
+:::
+More outer contents.
 </div>                        
 ```
 
