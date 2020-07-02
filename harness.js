@@ -53,8 +53,8 @@ var processor = unified()
    })
 
    .use(remark2rehype)
-   .use(format)
-   .use(html)
+   // .use(format)
+   .use(html, {})
 
 
 
@@ -99,14 +99,21 @@ const fs = require('fs')
 
 
 let text = `
-::: noparse quote as stated by john doe
+::: noparse div outer
 # Header One
-Contents.
-:::
+
+Outer contents.
+
+ ::: div inner
+ Inner contents. 
+ :::
+
+More outer contents.
+::: 
 `
 
 console.log(text)
 processor.process(text, function (err, file) {
    console.error(report(err || file))
-   console.log(String(file))
+   console.log(file.toString())
 })

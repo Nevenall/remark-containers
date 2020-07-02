@@ -4,11 +4,14 @@ Since this package is starting to be used by the wider world, I'll start a chang
 
 I try to keep to semantic versioning.
 
-## 1.1.3
+## 1.2.0
+
+**Minor Compatibility Warning** This version reintroduces named regex captures. They were removed earlier because of lack of browser support, [but the situation has improved](https://caniuse.com/#feat=mdn-javascript_builtins_regexp_named_capture_groups). 
 
 ### Added
 
-- `noparse` keyword after `:::` prevents parsing the content of the container. 
+- `noparse` keyword after `:::` prevents treats the body of the container as raw text. 
+
 
 ## 1.1.2
 
