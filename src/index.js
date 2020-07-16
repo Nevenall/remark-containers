@@ -1,4 +1,4 @@
-var regex = /^:::[\t\f ]*(?<noparse>noparse)?[\t\f ]*(?<type>\S+)[\t\f ]*(?<config>.*?)$/m
+var regex = /^:::[\t\f ]*(noparse)?[\t\f ]*(\S+)[\t\f ]*(.*?)$/m
 
 function plugin(options) {
    options = options || {
@@ -14,7 +14,7 @@ function plugin(options) {
          if (m) {
             if (silent) return true
 
-            var [nopparse, type, config] = [m.groups.noparse, m.groups.type, m.groups.config]
+            var [noparse, type, config] = [m[1], m[2], m[3]]
 
             var container = []
             var depth = 0
@@ -57,7 +57,7 @@ function plugin(options) {
                }
 
                // if the noparse flag is present treat the body as text content.
-               if (nopparse) {
+               if (noparse) {
                   node.children = [{ type: 'text', value: body }]
                } else {
                   node.children = this.tokenizeBlock(body, eat.now())
@@ -84,10 +84,10 @@ function plugin(options) {
                // might be a match
                var m = regex.exec(value.trim())
                // only match containers of the specified type
-               if (m && m.groups.type === el.type) {
+               if (m && m[2] === el.type) {
                   if (silent) return true
 
-                  var [nopparse, type, config] = [m.groups.noparse, m.groups.type, m.groups.config]
+                  var [noparse, type, config] = [m[1], m[2], m[3]]
 
                   var container = []
                   var depth = 0
@@ -123,7 +123,7 @@ function plugin(options) {
                      }
 
                      // if the noparse flag is present treat the body as text content
-                     if (nopparse) {
+                     if (noparse) {
                         node.children = [{ type: 'text', value: body }]
                      } else {
                         node.children = this.tokenizeBlock(body, now)
