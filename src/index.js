@@ -87,7 +87,7 @@ function plugin(options) {
                if (m && m.groups.type === el.type) {
                   if (silent) return true
 
-                  var [nopparse, type, config] = [m.groups.noparse, m.groups.type, m.groups.config]
+                  var [nopparse, type, config] = [m.groups.noparse || el.noparse === true, m.groups.type, m.groups.config]
 
                   var container = []
                   var depth = 0
