@@ -1,2 +1,0 @@
-exports.fromMarkdown = {}
-exports.toMarkdown = {}
