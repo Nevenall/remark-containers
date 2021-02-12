@@ -17,8 +17,8 @@ function tokenizeContainer(effects, ok, nok) {
       if (code !== 58 /* `:` */) { throw new Error('expected `:`') }
 
       // todo - open something, perhaps several things
-      effects.enter('container')
-
+      // effects.enter('container')
+      effects.enter('containerFence')
       return openingFence(code)
    }
 
@@ -34,6 +34,8 @@ function tokenizeContainer(effects, ok, nok) {
       if (openingCharacters !== 3) {
          return nok(code)
       }
+
+      effects.exit('containerFence')
 
       // todo - exit the container sequence
       return whitespace(effects, afterFence, 'whitespace')(code)
@@ -57,12 +59,14 @@ function tokenizeContainer(effects, ok, nok) {
    function afterFence(code) {
       console.log(code)
 
-      return whitespace(effects, words, 'whitespace')(code)
+      return whitespace(effects, containerOptions, 'whitespace')(code)
    }
 
 
-   function words(code){
-
+   function containerOptions(code) {
+      // if this is not a lineending
+      // open container options
+      return ok(code)
    }
 
 

@@ -27,25 +27,26 @@ More outer contents.
 `
 
 
-   let mdast = fromMarkdown(text, {
-      extensions: [syntax()],
-      mdastExtensions: []
-   })
+   let mdast = unified()
+      .use(parse)
+      .use(containers)
+      .parse(text)
+
 
    console.log(mdast)
 
-   debugger
+   // debugger
 
    let hast = await unified().use(remark2rehype).run(mdast)
 
    console.log(hast)
 
-   debugger
+   // debugger
 
    let html = unified().use(stringify).stringify(hast)
 
    console.log(html)
 
-   debugger
+   // debugger
 
 })()

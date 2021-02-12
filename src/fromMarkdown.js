@@ -1,13 +1,30 @@
+exports.canContainEols = ['textDirective']
+
 exports.enter = {
-   // table: enterTable,
-   // tableData: enterCell,
-   // tableHeader: enterCell,
-   // tableRow: enterRow
+   container: enterContainer,
+   containerFence: enterFence
 }
+
 exports.exit = {
-   // codeText: exitCodeText,
-   // table: exitTable,
-   // tableData: exit,
-   // tableHeader: exit,
-   // tableRow: exit
+   container: exitContainer,
+   containerFence: exitFence
+}
+
+
+function enterContainer(token) {
+   // enter.call(this, 'container', token)
+   console.log(`[enterContainer] ${token}`)
+}
+
+
+function exitContainer(token) {
+   debugger
+}
+
+function enterFence(token) {
+   debugger
+}
+
+function exitFence(token) {
+   debugger
 }
