@@ -9,7 +9,14 @@
       "type": "node",
       "request": "launch",
       "name": "Harness",
-      "program": "${workspaceFolder}/harness.js"
+      "program": "${workspaceFolder}/harness.js",
+      
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "test",
+      "program": "${workspaceFolder}/test.js"
     },
     {
       "type": "node",

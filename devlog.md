@@ -29,8 +29,15 @@ So, key is the tokenizer is a state machine the consumes characters and turns th
 https://github.com/micromark/micromark-extension-gfm-table/blob/main/syntax.js
 
 
-## 2.8.2020
+## 2.8.2021, danb
 
 understanding the remark-directives more. In the readme there is custom html handlers to do the transform of directive nodes into some html nodes. 
 we want that, but also some default behaviors, so, can we add htmlDirectives to the pipeline from our container? 
 because it has to extend remark2rehype, though we could translate that into the mdast nodes that will translate into html well. 
+
+## 2.27.2021, danb
+
+dude was I slow. markdownline ending returns a bool. therefore a code will never equal that. geezz
+that, at least, is an argument for strong typing. 
+
+

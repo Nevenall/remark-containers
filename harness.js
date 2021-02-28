@@ -12,7 +12,7 @@
    const tokenizer = require('./src/tokenizer.js')
    const syntax = require('./src/syntax.js')
 
-   let text = `
+   let hardText = `
 ::: noparse div outer
 # Header One
 
@@ -26,11 +26,18 @@ More outer contents.
 ::: 
 `
 
+let easyText = `::: noparse div outer
+# Header One
+
+Contents.
+
+::: 
+`
 
    let mdast = unified()
       .use(parse)
       .use(containers)
-      .parse(text)
+      .parse(easyText)
 
 
    console.log(mdast)
@@ -47,6 +54,6 @@ More outer contents.
 
    console.log(html)
 
-   // debugger
+   debugger
 
 })()
