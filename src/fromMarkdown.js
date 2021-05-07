@@ -31,8 +31,18 @@ function exitFence(token) {
 
 function enterConfiguration(token) {
    console.log('[enterConfiguration]', token)
+
+   // start an object for configuration
+   this.setData('containerConfiguration', [])
+   this.buffer() // Capture EOLs
 }
 
 function exitConfiguration(token) {
    console.log('[exitConfiguration]', token)
+
+   // decode the config
+   this.getData('containerConfiguration').push([
+      'config',
+      this.sliceSerialize(token)
+   ])
 }

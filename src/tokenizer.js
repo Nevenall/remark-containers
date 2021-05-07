@@ -1,6 +1,15 @@
 var markdownLineEnding = require('micromark/dist/character/markdown-line-ending')
 var whitespace = require('micromark/dist/tokenize/factory-space')
 
+
+var asciiAlpha = require('micromark/dist/character/ascii-alpha')
+var asciiAlphanumeric = require('micromark/dist/character/ascii-alphanumeric')
+var markdownLineEnding = require('micromark/dist/character/markdown-line-ending')
+var markdownLineEndingOrSpace = require('micromark/dist/character/markdown-line-ending-or-space')
+var markdownSpace = require('micromark/dist/character/markdown-space')
+var createWhitespace = require('micromark/dist/tokenize/factory-whitespace')
+var createSpace = require('micromark/dist/tokenize/factory-space')
+
 function tokenizeContainer(effects, ok, nok) {
    let self = this
    let openingCharacters = 0
@@ -72,12 +81,22 @@ function tokenizeContainer(effects, ok, nok) {
    /// we can either deal with the config as one string, or we can try to tokenize the config into individual words
    /// we want the config values for downstream parsing
 
+   /// Ok, config might be nothing, whitespace to line ending
+   /// or it might be some individual words
+   /// it might also be a phrase wrapped in "", '', or ``
+   /// I think that's good
+   /// 
+
    function configuration(code) {
+
+
       // note - if the config is ever over the js recursion limit of ~ 15000 depending on the browser this will fail. 
       if (!markdownLineEnding(code)) {
          effects.consume(code)
          return configuration
       }
+
+
       // we've consumed all of the config, time for contents
       effects.exit('configuration')
       return content(code)

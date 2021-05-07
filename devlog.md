@@ -41,3 +41,10 @@ dude was I slow. markdownline ending returns a bool. therefore a code will never
 that, at least, is an argument for strong typing. 
 
 
+## 5.6.2021, danb
+
+we have learned some about tokens. In the exitConfig we can call this.sliceSerialize(token) to get the config string. 
+The question is...do we take take the whole string and parse it once in the exit, or do we parse each part of it? 
+
+I think we should do it at the state machine level. Otherwise, how do we do the extra md parsing we might want?
+
