@@ -1,14 +1,17 @@
-var markdownLineEnding = require('micromark/dist/character/markdown-line-ending')
-var whitespace = require('micromark/dist/tokenize/factory-space')
+import { markdownLineEnding, markdownSpace } from 'micromark-util-character'
 
 
-var asciiAlpha = require('micromark/dist/character/ascii-alpha')
-var asciiAlphanumeric = require('micromark/dist/character/ascii-alphanumeric')
-var markdownLineEnding = require('micromark/dist/character/markdown-line-ending')
-var markdownLineEndingOrSpace = require('micromark/dist/character/markdown-line-ending-or-space')
-var markdownSpace = require('micromark/dist/character/markdown-space')
-var createWhitespace = require('micromark/dist/tokenize/factory-whitespace')
-var createSpace = require('micromark/dist/tokenize/factory-space')
+
+
+
+
+
+export default  {
+   tokenize: tokenizeContainer,
+   concrete: true
+}
+
+
 
 function tokenizeContainer(effects, ok, nok) {
    let self = this
@@ -23,7 +26,7 @@ function tokenizeContainer(effects, ok, nok) {
       //    return nok(code)
       // }
 
-      if (code !== 58 /* `:` */) { throw new Error('expected `:`') }
+      if (code !== 58 /* : */) { throw new Error('expected `:`') }
 
       // todo - open something, perhaps several things
       effects.enter('container')
@@ -33,7 +36,7 @@ function tokenizeContainer(effects, ok, nok) {
 
    /// match an opening ':::'
    function openingFence(code) {
-      if (code === 58) {
+      if (code === 58 /* : */) {
          effects.consume(code)
          openingCharacters++
          return openingFence
@@ -68,13 +71,12 @@ function tokenizeContainer(effects, ok, nok) {
    function openConfiguration(code) {
       if (!markdownLineEnding(code)) {
          effects.enter('configuration')
-         effects.consume(code)
          return configuration
-
       }
       // there is no configuration, but that is ok, proceed with the container content
       return content(code)
    }
+
 
 
    /// Parse configuration
@@ -88,18 +90,50 @@ function tokenizeContainer(effects, ok, nok) {
    /// 
 
    function configuration(code) {
-
-
       // note - if the config is ever over the js recursion limit of ~ 15000 depending on the browser this will fail. 
-      if (!markdownLineEnding(code)) {
-         effects.consume(code)
-         return configuration
-      }
 
+      // try noparse
+      return noparse(code)
+
+      // if (!markdownLineEnding(code)) {
+      //    return noparse(code)
+      // }
 
       // we've consumed all of the config, time for contents
       effects.exit('configuration')
       return content(code)
+   }
+
+   function noparse(code) {
+
+      var letters = []
+
+      // if consume and check each
+      // either recuse or flat out try and consume each  letter
+      // I think if we don't call exit 
+      // then 
+
+
+      return function (code) {
+
+         effects.check(110)
+
+
+         if (code === 110 /* n */ || code === 78 /* N */) {
+            effects.enter('noparse')
+            letters.push('n')
+            effects.consume(code)
+
+            // return a function, because otherwise we don't have the next code
+
+            // 
+            // then we recurse and check the array 
+            // then we can assemble the array
+
+
+         }
+      }
+
    }
 
 
@@ -112,6 +146,3 @@ function tokenizeContainer(effects, ok, nok) {
 
 
 }
-
-exports.tokenize = tokenizeContainer
-exports.concrete = true

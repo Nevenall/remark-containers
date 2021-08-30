@@ -1,9 +1,11 @@
-var tokenizer = require('./tokenizer.js')
+import tokenizer from './tokenizer.js'
 
-module.exports = function () {
+export default function containers() {
+
    return {
       flow: { 58: [tokenizer] }
    }
+   
 }
 
 

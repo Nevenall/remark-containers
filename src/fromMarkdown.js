@@ -1,17 +1,18 @@
-exports.canContainEols = ['textDirective']
-
-exports.enter = {
-   container: enterContainer,
-   containerFence: enterFence,
-   configuration: enterConfiguration
+export default {
+   canContainEols: ['textDirective'],
+   enter: {
+      container: enterContainer,
+      containerFence: enterFence,
+      configuration: enterConfiguration,
+      noparse: enterNoparse
+   },
+   exit: {
+      container: exitContainer,
+      containerFence: exitFence,
+      configuration: exitConfiguration,
+      noparse: exitNoparse
+   }
 }
-
-exports.exit = {
-   container: exitContainer,
-   containerFence: exitFence,
-   configuration: exitConfiguration
-}
-
 
 function enterContainer(token) {
    console.log('[enterContainer]', token)
@@ -35,6 +36,14 @@ function enterConfiguration(token) {
    // start an object for configuration
    this.setData('containerConfiguration', [])
    this.buffer() // Capture EOLs
+}
+
+function enterNoparse(token) {
+   console.log('[enterNoparse]', token)
+}
+
+function exitNoparse(token) {
+   console.log('[exitNoparse]', token)
 }
 
 function exitConfiguration(token) {
