@@ -144,5 +144,19 @@ function tokenizeContainer(effects, ok, nok) {
    }
 
 
+   function whitespace(code) {
+      if (code === -2 || code === -1 || code === 32) {
+        effects.consume(code)
+        return whitespace
+      }
+   
+      if (code === null || code === -5 || code === -4 || code === -3) {
+        return ok(code)
+      }
+   
+      return nok(code)
+    }
+   
+
 
 }
