@@ -48,3 +48,6 @@ The question is...do we take take the whole string and parse it once in the exit
 
 I think we should do it at the state machine level. Otherwise, how do we do the extra md parsing we might want?
 
+## 9.1.2021, danb
+
+little dribs and drabs of work. Here's documentation about the state machine. https://github.com/micromark/common-markup-state-machine

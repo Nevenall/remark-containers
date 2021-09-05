@@ -1,11 +1,6 @@
 import { markdownLineEnding, markdownSpace } from 'micromark-util-character'
 
 
-
-
-
-
-
 export default  {
    tokenize: tokenizeContainer,
    concrete: true
