@@ -10,8 +10,8 @@
       "name": "Harness",
       "program": "${workspaceFolder}/harness.mjs",
       "args": [
-        "--trace-warnings",
-        "--inspect"
+        "--inspect",
+        "--trace-warnings"
       ]
     },
     {

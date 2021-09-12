@@ -1,12 +1,14 @@
 import { markdownLineEnding, markdownSpace } from 'micromark-util-character'
+import { factoryWhitespace } from 'micromark-factory-whitespace'
+import { factorySpace } from 'micromark-factory-space'
+import { codes } from 'micromark-util-symbol/codes'
+import { types } from 'micromark-util-symbol/types'
 
 
-export default  {
+export default {
    tokenize: tokenizeContainer,
    concrete: true
 }
-
-
 
 function tokenizeContainer(effects, ok, nok) {
    let self = this
@@ -21,7 +23,7 @@ function tokenizeContainer(effects, ok, nok) {
       //    return nok(code)
       // }
 
-      if (code !== 58 /* : */) { throw new Error('expected `:`') }
+      if (code !== codes.colon) { throw new Error('expected `:`') }
 
       // todo - open something, perhaps several things
       effects.enter('container')
@@ -31,7 +33,7 @@ function tokenizeContainer(effects, ok, nok) {
 
    /// match an opening ':::'
    function openingFence(code) {
-      if (code === 58 /* : */) {
+      if (code === codes.colon) {
          effects.consume(code)
          openingCharacters++
          return openingFence
@@ -42,7 +44,10 @@ function tokenizeContainer(effects, ok, nok) {
          return nok(code)
       }
       effects.exit('containerFence')
-      return whitespace(effects, openConfiguration, 'whitespace')(code)
+   
+      // consume spaces, but not new lines
+      // and continue with openConfig
+      return factorySpace(effects, openConfiguration, types.whitespace)(code)
    }
 
    // todo - after we consume any whitespace after the intial ::: we need to tokenize the words after it
@@ -87,8 +92,10 @@ function tokenizeContainer(effects, ok, nok) {
    function configuration(code) {
       // note - if the config is ever over the js recursion limit of ~ 15000 depending on the browser this will fail. 
 
-      // try noparse
-      return noparse(code)
+      // check for 'noparse'
+        effects.attempt({}, noparse, configuration)(code)
+        
+      //   noparse(code)
 
       // if (!markdownLineEnding(code)) {
       //    return noparse(code)
@@ -100,34 +107,25 @@ function tokenizeContainer(effects, ok, nok) {
    }
 
    function noparse(code) {
-
-      var letters = []
-
       // if consume and check each
       // either recuse or flat out try and consume each  letter
       // I think if we don't call exit 
       // then 
 
-
-      return function (code) {
-
-         effects.check(110)
-
-
-         if (code === 110 /* n */ || code === 78 /* N */) {
-            effects.enter('noparse')
-            letters.push('n')
-            effects.consume(code)
-
-            // return a function, because otherwise we don't have the next code
-
-            // 
-            // then we recurse and check the array 
-            // then we can assemble the array
-
-
-         }
+      // check for the word noparse
+      if (code === 110 || code === 78) {
+         effects.enter('noparse')
+         effects.consume(code)
+      } else {
+         // the first character is not an 'N' so we reconsume
+         return
       }
+      if (code === 111 || code === 79) {
+
+      }
+
+      // if we get all the way to the end noparse is a true thing
+      effects.exit('noparse')
 
    }
 
@@ -141,17 +139,17 @@ function tokenizeContainer(effects, ok, nok) {
 
    function whitespace(code) {
       if (code === -2 || code === -1 || code === 32) {
-        effects.consume(code)
-        return whitespace
+         effects.consume(code)
+         return whitespace
       }
-   
+
       if (code === null || code === -5 || code === -4 || code === -3) {
-        return ok(code)
+         return ok(code)
       }
-   
+
       return nok(code)
-    }
-   
+   }
+
 
 
 }

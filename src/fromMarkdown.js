@@ -34,8 +34,8 @@ function enterConfiguration(token) {
    console.log('[enterConfiguration]', token)
 
    // start an object for configuration
-   this.setData('containerConfiguration', [])
    this.buffer() // Capture EOLs
+   this.setData('containerConfiguration', [])
 }
 
 function enterNoparse(token) {
