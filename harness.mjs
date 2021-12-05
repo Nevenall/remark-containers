@@ -1,17 +1,17 @@
 import report from 'vfile-reporter'
-import {unified} from 'unified'
+import { unified } from 'unified'
 import parse from 'remark-parse'
 import containers from './src/index.js'
 import remark2rehype from 'remark-rehype'
 import format from 'rehype-format'
 import stringify from 'rehype-stringify'
-import {fromMarkdown} from 'mdast-util-from-markdown'
-import {micromark} from 'micromark'
+import { fromMarkdown } from 'mdast-util-from-markdown'
+import { micromark } from 'micromark'
 
 
 (async () => {
 
-   let hardText = `pl
+   let hardText = `
 ::: noparse div outer
 # Header One
 
@@ -53,6 +53,6 @@ Contents.
 
    console.log(html)
 
-   
+
 
 })()

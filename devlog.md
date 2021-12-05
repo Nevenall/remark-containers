@@ -51,3 +51,4 @@ I think we should do it at the state machine level. Otherwise, how do we do the 
 ## 9.1.2021, danb
 
 little dribs and drabs of work. Here's documentation about the state machine. https://github.com/micromark/common-markup-state-machine
+

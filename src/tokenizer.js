@@ -12,20 +12,13 @@ export default {
 
 function tokenizeContainer(effects, ok, nok) {
    let self = this
-   let openingCharacters = 0
+   let colonsSeen = 0
    let previous
 
    return start
 
    function start(code) {
-      // note - not sure we need this guard
-      // if (code === null || code === -5 || code === -4 || code === -3) {
-      //    return nok(code)
-      // }
-
       if (code !== codes.colon) { throw new Error('expected `:`') }
-
-      // todo - open something, perhaps several things
       effects.enter('container')
       effects.enter('containerFence')
       return openingFence(code)
@@ -35,20 +28,82 @@ function tokenizeContainer(effects, ok, nok) {
    function openingFence(code) {
       if (code === codes.colon) {
          effects.consume(code)
-         openingCharacters++
+         colonsSeen++
          return openingFence
       }
 
       // match only 3 ':'
-      if (openingCharacters !== 3) {
+      if (colonsSeen !== 3) {
          return nok(code)
       }
       effects.exit('containerFence')
-   
-      // consume spaces, but not new lines
-      // and continue with openConfig
-      return factorySpace(effects, openConfiguration, types.whitespace)(code)
+
+      return content(code)
    }
+
+
+   function content(code) {
+      if (code === null) {
+         effects.exit('containerContent')
+         return ok(code)
+      }
+      effects.enter('containerContent')
+
+      // attempt to tokenize the container contents
+      // what exactly are we attempting? is this look for an immediate closing fence, otherwise deal with the contents?
+      // or is this something else?
+      return effects.attempt({ tokenize: tokenizeClosingFence, partial: true }, code => {
+         console.log('[ReturnState]')
+         effects.exit('containerContent')
+         effects.exit('container')
+         return ok(code)
+      }, code => {
+         console.log('[BogusState]')
+         return nok(code)
+      })(code)
+
+
+   }
+
+
+   // i get it, this is like a sub-state machine
+   // this is copied from remark-directive
+   function tokenizeClosingFence(effects, ok, nok) {
+      let size = 0
+      return factorySpace(effects, closingPrefixAfter, 'linePrefix', 4)
+      /** @type {State} */
+
+      function closingPrefixAfter(code) {
+         effects.enter('containerFence')
+         // effects.enter('directiveContainerSequence')
+         return closingSequence(code)
+      }
+      /** @type {State} */
+
+      function closingSequence(code) {
+         if (code === 58) {
+            effects.consume(code)
+            size++
+            return closingSequence
+         }
+
+         if (size !== 3) return nok(code)
+         // effects.exit('directiveContainerSequence')
+         return factorySpace(effects, closingSequenceEnd, 'whitespace')(code)
+      }
+      /** @type {State} */
+
+      function closingSequenceEnd(code) {
+         if (code === null || markdownLineEnding(code)) {
+            effects.exit('containerFence')
+            return ok(code)
+         }
+
+         return nok(code)
+      }
+   }
+
+
 
    // todo - after we consume any whitespace after the intial ::: we need to tokenize the words after it
    // ::: noparse 
@@ -77,24 +132,19 @@ function tokenizeContainer(effects, ok, nok) {
       return content(code)
    }
 
-
-
    /// Parse configuration
    /// we can either deal with the config as one string, or we can try to tokenize the config into individual words
    /// we want the config values for downstream parsing
-
    /// Ok, config might be nothing, whitespace to line ending
    /// or it might be some individual words
    /// it might also be a phrase wrapped in "", '', or ``
    /// I think that's good
-   /// 
-
    function configuration(code) {
       // note - if the config is ever over the js recursion limit of ~ 15000 depending on the browser this will fail. 
 
       // check for 'noparse'
-        effects.attempt({}, noparse, configuration)(code)
-        
+      //effects.attempt({}, noparse, configuration)(code)
+
       //   noparse(code)
 
       // if (!markdownLineEnding(code)) {
@@ -130,11 +180,7 @@ function tokenizeContainer(effects, ok, nok) {
    }
 
 
-   function content(code) {
-      effects.enter('content')
-      effects.exit('content')
-      return ok(code)
-   }
+
 
 
    function whitespace(code) {
