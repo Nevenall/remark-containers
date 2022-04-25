@@ -9,9 +9,15 @@
       "request": "launch",
       "name": "Harness",
       "program": "${workspaceFolder}/harness.mjs",
+      "env": {
+        "DEBUG": "*"
+      },
       "args": [
         "--inspect",
-        "--trace-warnings"
+        "--trace-warnings",
+        "--conditions",
+        "development"
+
       ]
     },
     {

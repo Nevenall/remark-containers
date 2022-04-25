@@ -38,6 +38,9 @@ function tokenizeContainer(effects, ok, nok) {
       }
       effects.exit('containerFence')
 
+
+// todo - enter config for this container and consume until a linebreak then exit config. Easy
+
       return content(code)
    }
 

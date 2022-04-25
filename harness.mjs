@@ -9,9 +9,7 @@ import { fromMarkdown } from 'mdast-util-from-markdown'
 import { micromark } from 'micromark'
 
 
-(async () => {
-
-   let hardText = `
+let hardText = `
 ::: noparse div outer
 # Header One
 
@@ -25,34 +23,34 @@ More outer contents.
 ::: 
 `
 
-   let easyText = `::: noparse div outer
+let easyText = `
+  ::: noparse div outer
+
 # Header One
 
 Contents.
 
-::: 
+  ::: 
 `
 
-   let mdast = unified()
-      .use(parse)
-      .use(containers)
-      .parse(easyText)
+let mdast = unified()
+   .use(parse)
+   .use(containers)
+   .parse(easyText)
 
 
-   console.log(mdast)
+console.log(mdast)
 
-   // debugger
+// debugger
 
-   let hast = await unified().use(remark2rehype).run(mdast)
+let hast = await unified().use(remark2rehype).run(mdast)
 
-   console.log(hast)
+console.log(hast)
 
-   // debugger
+// debugger
 
-   let html = unified().use(stringify).stringify(hast)
+let html = unified().use(stringify).stringify(hast)
 
-   console.log(html)
+console.log(html)
 
 
-
-})()
