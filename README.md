@@ -1,3 +1,9 @@
+# I reccomend you take a look at this alternative
+
+https://github.com/micromark/micromark-extension-directive
+
+
+
 # remark-containers
 
 This [remark] plugin provides parsing for containers in your markdown. 
