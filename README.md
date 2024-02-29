@@ -1,6 +1,6 @@
 # I reccomend you take a look at this alternative
 
-https://github.com/micromark/micromark-extension-directive
+https://github.com/remarkjs/remark-directive
 
 
 
